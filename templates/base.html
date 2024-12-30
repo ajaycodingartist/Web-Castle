@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .cta-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Logout button style */
+        .logout-button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{% url 'home' %}" style="color: white; text-decoration: none;">Our Platform</a>
+            </div>
+            {% if user.is_authenticated %}
+                <!-- Authenticated user view -->
+                <div class="nav-auth">
+                    <p>Hello, {{ user.username }}!</p>
+                    <a href="{% url 'user_blogs' %}" class="cta-button">My Blogs</a>  <!-- Add link to view user blogs -->
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </div>
+            {% else %}
+                <!-- Unauthenticated user view -->
+                <div class="cta-buttons">
+                    <a href="{% url 'login' %}" class="cta-button">Login</a>
+                    <a href="{% url 'register' %}" class="cta-button">Register</a>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <p style="text-align: center; padding: 15px; background-color: #4CAF50; color: white;">
+            &copy; 2024 Our Platform. All Rights Reserved.
+        </p>
+    </footer>
+
+</body>
+</html>

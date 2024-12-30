@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home 
+{% endblock %}
+
+{% block content %}  
+
+{% load static %}
+
+<main>
+    <div class="content">
+        <h1>Introduction</h1>
+        <p>
+            Welcome to our platform where you can register, log in, and manage your profile easily. 
+            Whether you're a new user or an existing one, we have all the tools you need to get started.
+        </p>
+        <div class="cta-buttons">
+            <a href="{% url 'register' %}" class="cta-button">Register</a>
+            <a href="{% url 'login' %}" class="cta-button">Login</a>
+        </div>
+        <p>Already have an account? <a href="">Login here</a>.</p>
+    </div>
+</main>
+
+
+{% endblock %}

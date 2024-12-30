@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create New Blog
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .container {
+        width: 90%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .blog-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 1em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+    }
+
+    .form-control {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+        color: #333;
+        background-color: #f9f9f9;
+    }
+
+    .form-control-file {
+        padding: 10px;
+        font-size: 1em;
+        color: #333;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 1.1em;
+        color: white;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #45a049;
+    }
+
+    button[type="submit"] {
+        align-self: center;
+        width: 200px;
+        margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+        }
+    }
+</style>
+
+<div class="container">
+    <h1>Create New Blog Post</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="blog-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="Enter blog title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea name="content" id="content" class="form-control" rows="6" placeholder="Write your blog content here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image (Optional):</label>
+            <input type="file" name="image" id="image" class="form-control-file">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script>
+    const token = localStorage.getItem('access_token');
+
+    document.querySelector('.blog-form').addEventListener('submit', async (e) => {
+        e.preventDefault();  // Prevent default form submission
+
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/posts/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Success:', data);
+                alert('Blog created successfully!');
+                window.location.href = '/';  // Redirect to the homepage or blog listing
+            } else {
+                console.error('Error:', data);
+                alert('Error creating blog: ' + JSON.stringify(data));
+            }
+        } catch (error) {
+            console.error('Unexpected Error:', error);
+            alert('Unexpected error occurred!');
+        }
+    });
+</script>
+
+{% endblock %}
